@@ -19,11 +19,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware('auth')->namespace('Admin')->name('admin.')->prefix('admin')->group( function () {
+Route::middleware('auth')->prefix('admin')->namespace('Admin')->name('admin.')->group( function () {
     Route::get('/', 'HomeController@index')->name('home');
 });
 
-Route::get('{any?}', function() {
-    return view('guest.home');
-})->where('any', '.*');
+// Route::get('{any?}', function() {
+//     return view('guest.home');
+// })->where('any', '.*');
 
