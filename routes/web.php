@@ -21,7 +21,9 @@ Route::middleware('auth')->prefix('admin')->namespace('Admin')->name('admin.')->
     // Admin Dashboard
     Route::get('/', 'HomeController@index')->name('dashboard');
     // Admin posts
-    Route::resource('posts', 'PostController');
+    Route::resource('posts', 'PostController')->parameters([
+        'posts' => 'post:slug'
+    ]);
 });
 
 // inseriamola come ultima rotta

@@ -6,7 +6,6 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -18,7 +17,6 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::orderByDesc('id')->get();
-        //dd($posts);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -40,18 +38,10 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        //dd($request->all());
-
-        // Validate data
         $val_data = $request->validated();
-        // Gererate the slug
-        $slug = Str::slug($request->title, '-');
-        //dd($slug);
+        $slug = Post::generateSlug($request->title);
         $val_data['slug'] = $slug;
-
-        // create the resource
         Post::create($val_data);
-        // redirect to a get route
         return redirect()->route('admin.posts.index')->with('message', 'Post Created Successfully');
     }
 
@@ -86,7 +76,11 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
-        //
+        $val_data = $request->validated();
+        $slug = Post::generateSlug($request->title);
+        $val_data['slug'] = $slug;
+        $post->update($val_data);
+        return redirect()->route('admin.posts.index')->with('message', "$post->title updated successfully");
     }
 
     /**
@@ -97,6 +91,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('admin.posts.index')->with('message', "$post->title deleted successfully");
     }
 }
